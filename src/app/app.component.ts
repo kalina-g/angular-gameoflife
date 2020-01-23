@@ -1,9 +1,10 @@
-import { Component, OnInit, OnChanges,DoCheck, Renderer2, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 
 const create2DArray = (n,m,val) => {
    return new Array(n).fill(val).map(x => new Array(m).fill(val))
 }
 
+//only 2d array of array
 const cloneArray = ( arr ) => {
     let i, copy;
 
@@ -13,14 +14,14 @@ const cloneArray = ( arr ) => {
             copy[ i ] = cloneArray( copy[ i ] );
         }
         return copy;
-    } else {
+    }  else {
         return arr;
     }
 }
 
 const isGridEmpty = (grid) => {
-  let sum = grid.reduce(function(i,v) { return [...i,...v] },[] ) 
-     .reduce(function(i,v) { return i + v }, 0); 
+  let sum = grid.reduce(function(i,v) { return [...i,...v] },[] )
+     .reduce(function(i,v) { return i + v }, 0);
 
   return sum === 0 ? true : false;
 }
@@ -33,32 +34,29 @@ const isGridEmpty = (grid) => {
 
 })
 export class AppComponent implements OnInit {
-  name = '';
+  grid;
   rows=20;
   cols=80;
-  grid = create2DArray(this.rows, this.cols, 0);
+  intervalId;
   generation = 0;
   playing = false;
-  intervalId;
-  
-  constructor(private renderer : Renderer2) {
-  }
-ngOnInit(){
 
-}
+  constructor() {
+  }
+
+  ngOnInit() {
+    this.grid = create2DArray(this.rows, this.cols, 0);
+  }
+
   trackByID = (i) => i;
-  
+
   handleCellClick = (e: any) => {
     if (this.playing) return;
     const [row, col] = e.target.getAttribute('id').split('-');
     const hasClass = e.target.classList.contains('alive');
     if(hasClass) {
-      this.renderer.removeClass(e.target, 'alive');
-      let newState = this.grid.map(inner => inner.slice());
       this.grid[row][col] = 0;
     } else {
-      this.renderer.addClass(e.target, 'alive');
-      let newState = this.grid.map(inner => inner.slice());
       this.grid[row][col] = 1;
     }
   }
@@ -66,24 +64,25 @@ ngOnInit(){
   startGame = () => {
 		clearInterval(this.intervalId);
 		this.intervalId = setInterval(() =>{
-      this.playing = true; 
+      this.playing = true;
       this.play();
-       if (isGridEmpty(this.grid) && this.generation > 1) {
-       clearInterval(this.intervalId);
-       this.playing = false; 
-       }
-      
-      }, 200);
+
+      if (isGridEmpty(this.grid) && this.generation > 1) {
+        clearInterval(this.intervalId);
+        this.playing = false;
+      }
+
+    }, 180);
 	}
 
   pauseGame = () => {
 		clearInterval(this.intervalId);
-    this.playing = false; 
+    this.playing = false;
 	}
 
   clearGrid = () => {
     clearInterval(this.intervalId);
-    this.playing = false; 
+    this.playing = false;
     this.grid = create2DArray(this.rows, this.cols, 0);
   }
 
@@ -101,12 +100,10 @@ ngOnInit(){
 
   play = () => {
     let g = cloneArray(this.grid);
-		let g2 = cloneArray(this.grid);
-    
 
 		for (let i = 0; i < this.rows; i++) {
 		  for (let j = 0; j < this.cols; j++) {
-		
+
         let count = 0;
 				for (var di = -1; di <= 1; di++) {
 					for (var dj = -1; dj <= 1; dj++) {
@@ -116,16 +113,14 @@ ngOnInit(){
 								&& this.grid[i+di][j+dj] === 1) {
 						count++;
 						}
-					}	
+					}
 				}
-		    if (g[i][j] && (count < 2 || count > 3)) g2[i][j] = 0;
-		    if (!g[i][j] && count === 3) g2[i][j] = 1;
+		    if (g[i][j] && (count < 2 || count > 3)) g[i][j] = 0;
+		    if (!g[i][j] && count === 3) g[i][j] = 1;
 		  }
 		}
 
-    //update state re-renderer    
-
-    this.grid = g2;
+    this.grid = g;
     this.generation++;
   }
 
