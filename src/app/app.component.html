@@ -1,14 +1,5 @@
-<button (click)="startGame()">Start</button>
-<button (click)="pauseGame()">Pause</button>
-<button (click)="clearGrid()">Clear</button>
-<button (click)="randomFillGrid()">Random populate grid</button>
-
-<table class="grid-table">
-  <tr *ngFor="let row of grid; let i = index; trackBy:trackByID">
-    <td *ngFor = "let col of row; let j = index; trackBy:trackByID"
-        (click) = "handleCellClick($event)"
-        id="{{i}}-{{j}}"
-        [class.alive]="col===1" >
-    </td>
-  </tr>
-</table>
+<div class="wrap">
+  <div class="inner-wrap">
+    <app-game-of-life></app-game-of-life>
+  </div>
+</div>
