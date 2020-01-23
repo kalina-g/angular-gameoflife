@@ -1,0 +1,13 @@
+.grid-table{
+  background:#efefef;
+  border-spacing: 0;
+}
+.grid-table td{
+  border: 1px solid #fff;
+  width: 8px;
+  height: 8px;
+  transition: background-color .2s;
+}
+.grid-table td.alive{
+  background-color:#5a74b7;
+}
