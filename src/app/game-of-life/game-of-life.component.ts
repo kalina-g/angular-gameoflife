@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridManagerService } from '../grid-manager.service';
 
+
 //only 2d array of array
 const cloneArray = ( arr ) => {
   let i, copy;
@@ -34,7 +35,9 @@ export class GameOfLifeComponent implements OnInit {
   generation = 0;
   playing = false;
 
-  constructor(private gridService:GridManagerService ) {
+  constructor(private gridService:GridManagerService)
+  {
+
   }
 
   ngOnInit() {
@@ -42,6 +45,26 @@ export class GameOfLifeComponent implements OnInit {
   }
 
   trackByID = (i) => i;
+
+  getCellColor(i, j, isActive){
+    if (isActive) {
+      let maxX=20;
+      let maxY=4;
+      let minX=10;
+      let minY=2;
+
+      let stepX = (maxX-minX)/this.gridService.cols;
+      let stepY = (maxY-minY)/this.gridService.rows;
+
+      let x = j*stepX + minX;
+      let y = i*stepY + minY;
+
+      return {"background-color":`hsl(${Math.floor(j/this.gridService.cols*360)}, 50%, ${x*y}%)`};
+    } else {
+      return {"background-color":"#efefef"};
+    }
+
+  }
 
   handleCellClick = (e: any) => {
     if (this.playing) return;

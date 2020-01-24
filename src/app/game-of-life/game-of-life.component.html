@@ -8,8 +8,9 @@
   <tr *ngFor="let row of grid; let i = index; trackBy:trackByID">
     <td *ngFor = "let col of row; let j = index; trackBy:trackByID"
         (click) = "handleCellClick($event)"
-        id="{{i}}-{{j}}"
-        [class.alive]="col===1" >
+        id = "{{i}}-{{j}}"
+        [class.alive]="col===1"
+        [ngStyle] = "getCellColor(i,j, col===1)">
     </td>
   </tr>
 </table>

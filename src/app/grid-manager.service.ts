@@ -30,7 +30,7 @@ export class GridManagerService {
 
     for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
-            if (Math.random() * 10 < 2) {
+            if (Math.random() * 10 < 3) {
                 grid[i][j] = 1;
             }
         }
